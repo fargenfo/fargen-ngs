@@ -1,5 +1,5 @@
 
-name: linkseq
+name: fargen-ngs
 
 channels:
   - bioconda
@@ -9,7 +9,6 @@ channels:
 
 dependencies:
   - nextflow=20.01.0
-  - ema=0.6.2
   - bwa=0.7.17
   - samtools=1.9
   - bbtools=37.62
@@ -17,7 +16,6 @@ dependencies:
   - r-gsalib=2.1
   - r-gplots=3.0.1.1
   - r-ggplot2=3.1.0
-  - bxtools=0.1.0
   - hapcut2=1.2
   - whatshap=0.18
   - fastqc=0.11.8

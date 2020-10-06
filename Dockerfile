@@ -2,7 +2,7 @@ FROM nfcore/base:latest
 
 LABEL \
     authors="olavur@fargen.fo" \
-    description="LinkSeq -- GATK best-practices pipeline adapted to linked-reads [WIP]" \
+    description="Align reads and call variants from Illumina short reads using GATK best practices [WIP]" \
     maintainer="Ólavur Mortensen <olavur@fargen.fo>"
 
 RUN apt-get update -yqq && \
@@ -12,4 +12,4 @@ RUN apt-get update -yqq && \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/linkseq/bin:$PATH
+ENV PATH /opt/conda/envs/fargen-ngs/bin:$PATH
