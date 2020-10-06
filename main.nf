@@ -27,7 +27,7 @@ params.help = false
 // TODO: make help string
 // Help message
 helpMessage = """
-Align linked-reads with the EMA aligner, call variants with GATK's HaplotypeCaller, filter and annotate variants. Peform
+Align short-reads with BWA, call variants with GATK's HaplotypeCaller, filter and annotate variants. Peform
 QC of raw reads, aligned reads and variants.
 
 There are two ways to supply input reads to the pipeline: either using --sample, --fastq_r1 and --fastq_r2, or using --fastq_csv.
@@ -70,7 +70,7 @@ if(params.fastq_csv == null & params.sample == null) {
     assert false, "Either --fastq_csv must be provided, or --sample, --fastq_r1 and --fastq_r2 must be provided."
 }
 
-println "L I N K S E Q    "
+println "F A R G E N - N G S     "
 println "================================="
 println "reference          : ${params.reference}"
 println "targets            : ${params.targets}"
@@ -214,6 +214,10 @@ process get_readgroup {
 // Combine the readgroup info with the no-barcode bin.
 readgroup_bwa_ch.join(nobc_bin_bwa_ch).set{data_bwa_ch}
 
+// FIXME:
+// The channel should not be called "nobc".
+
+
 // Align the no-barcode bin. These reads had barcodes that didn't match the whitelist, so they are aligned
 // as you would normal sequencing reads.
 process map_nobc {
@@ -245,9 +249,6 @@ process sort_bam {
 }
 
 // Mark duplicates in BAM.
-// NOTE:
-// MarkDuplicates has the following option, I wonder why:
-// --BARCODE_TAG:String          Barcode SAM tag (ex. BC for 10X Genomics)  Default value: null.
 process mark_dup {
     input:
     set sample, file(bam) from sorted_bam_markdup_ch
@@ -599,7 +600,7 @@ Part 4:
 Phase the haplotypes in the VCF using HapCUT2, and then phase the BAM using WhatsHap.
 */
 
-// The prcedure used here to phase the VCF is explained here: https://github.com/arshajii/ema/
+// FIXME: how is the data phased? Is it read-backed phasing?
 
 // Prepare input data for processes.
 variants_phase_ch.join(bam_phase_vcf_ch).set { data_extract_hairs_ch }
@@ -845,7 +846,7 @@ process multiqc {
 
 
 workflow.onComplete {
-    log.info "L I N K S E Q   "
+    log.info 'F A R G E N - N G S     '
     log.info "================================="
     log.info "reference          : ${params.reference}"
     log.info "targets            : ${params.targets}"
