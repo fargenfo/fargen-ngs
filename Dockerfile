@@ -12,4 +12,5 @@ RUN apt-get update -yqq && \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
+RUN nextflow pull olavurmortensen/fargen-ngs
 ENV PATH /opt/conda/envs/fargen-ngs/bin:$PATH
