@@ -156,6 +156,8 @@ process merge_lanes {
     """
 }
 
+// FIXME: still many comments, channel names, and such, that only make sense for the linked-read pipeline.
+
 // NOTE:
 // A note about input/output channel naming convention.
 // The output channels are usually named such that they indicate what data is
