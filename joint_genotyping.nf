@@ -10,7 +10,7 @@ Use SnpEff dataDir
 */
 
 // Input parameters.
-params.gvcf_path = null
+params.tsv_file = null
 params.reference = null
 params.dbsnp = null
 params.targets = null
@@ -35,7 +35,7 @@ if (params.help){
 }
 
 // Make sure necessary input parameters are assigned.
-assert params.gvcf_path != null, 'Input parameter "gvcf_path" cannot be unasigned.'
+assert params.tsv_file != null, 'Input parameter "tsv_file" cannot be unasigned.'
 assert params.reference != null, 'Input parameter "reference" cannot be unasigned.'
 assert params.dbsnp != null, 'Input parameter "dbsnp" cannot be unasigned.'
 assert params.mills != null, 'Input parameter "mills" cannot be unasigned.'
@@ -48,7 +48,7 @@ assert params.outdir != null, 'Input parameter "outdir" cannot be unasigned.'
 
 println "L I N K S E Q -- Joint Genotyping    "
 println "================================="
-println "gvcf_path          : ${params.gvcf_path}"
+println "tsv_file          : ${params.tsv_file}"
 println "reference          : ${params.reference}"
 println "dbsnp              : ${params.dbsnp}"
 println "mills              : ${params.mills}"
@@ -84,11 +84,7 @@ kGphase3 = file(params.kGphase3)
 omni = file(params.omni)
 hapmap = file(params.hapmap)
 targets = file(params.targets)
-
-// Get the GVCF indexes.
-gvcf_idx_ch = Channel.fromPath(params.gvcf_path + "/*.g.vcf.idx")
-
-gvcf_ch = Channel.fromPath(params.gvcf_path + "/*.g.vcf")
+tsv_file = file(params.tsv_file)
 
 // TODO:
 // --reader-threads argument can possibly improve performance, but only works with one interval at a time:
@@ -100,23 +96,19 @@ gvcf_ch = Channel.fromPath(params.gvcf_path + "/*.g.vcf")
 // thereby parallelizing computation.
 // With exome data, chunking is somewhat easy. With whole-genomes, you may have to choose the split more carefully.
 
+
 // Consolidate the GVCFs with a "genomicsdb" database, so that we are ready for joint genotyping.
 process consolidate_gvcf {
-    input:
-    file gvcfs from gvcf_ch.collect()
-    file idx from gvcf_idx_ch.collect()
 
     output:
     file "genomicsdb" into genomicsdb_ch
 
     script:
-    gvcfs = (gvcfs as List).join(' -V ')
-    gvcfs = '-V ' + gvcfs
     """
     mkdir tmp
     export TILEDB_DISABLE_FILE_LOCKING=1
     gatk GenomicsDBImport \
-        $gvcfs \
+        --sample-name-map $tsv_file \
         -L $targets \
         --genomicsdb-workspace-path "genomicsdb" \
         --merge-input-intervals \
