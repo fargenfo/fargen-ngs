@@ -224,7 +224,7 @@ readgroup_bwa_ch.join(nobc_bin_bwa_ch).set{data_bwa_ch}
 // as you would normal sequencing reads.
 process map_nobc {
     input:
-    set sample, rg, file(nobc_bin) from data_bwa_ch
+    set sample, rg, file(nobc_bin), sync_status from data_bwa_ch
 
     output:
     set sample, file("nobc.bam") into nobc_bam_ch
