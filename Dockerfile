@@ -15,4 +15,4 @@ RUN conda config --set channel_priority strict && \
     conda env create -f /environment.yml && \
     conda clean -a
 ENV PATH /opt/conda/envs/fargen-ngs/bin:$PATH
-RUN nextflow pull olavurmortensen/fargen-ngs
+RUN nextflow pull fargenfo/fargen-ngs
